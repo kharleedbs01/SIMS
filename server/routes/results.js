@@ -1,0 +1,10 @@
+const express = require('express');
+const router = express.Router();
+const { getResults, getMyResults, upsertResult, bulkUpsert, deleteResult, getReportCard } = require('../controllers/resultController');
+const { protect, authorize } = require('../middleware/auth');
+router.get('/my', protect, authorize('student'), getMyResults);
+router.get('/report-card/:studentId', protect, getReportCard);
+router.route('/').get(protect, getResults).post(protect, authorize('admin', 'teacher'), upsertResult);
+router.post('/bulk', protect, authorize('admin', 'teacher'), bulkUpsert);
+router.delete('/:id', protect, authorize('admin'), deleteResult);
+module.exports = router;
